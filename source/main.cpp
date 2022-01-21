@@ -1,41 +1,28 @@
+#include "../headers/player.h"
 #include "raylib.h"
-
-int main(void)
+#include <iostream>
+#include <vector>
+using namespace std;
+int main()
 {
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
-
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
-
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
-
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    const int screenWidth = 1000;
+    const int screenHeight = 500;
+    const int playerWidth = 100;
+    const int playerHeight = 100;
+    InitWindow(screenWidth, screenHeight, "space-invaders");
+    Texture2D playerTexture = LoadTexture("../resources/player.png");
+    vector<Rectangle> bullets;
+    Player player(0,screenHeight-playerHeight,playerWidth,playerHeight,&playerTexture,&bullets);
+    SetTargetFPS(60);               
+    while (!WindowShouldClose())    
     {
-        // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
-        //----------------------------------------------------------------------------------
-
-        // Draw
-        //----------------------------------------------------------------------------------
         BeginDrawing();
-
-            ClearBackground(RAYWHITE);
-
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-
+            ClearBackground(BLACK);
+            player.draw();
+            player.move();
+            player.handleBullets();
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-
-    return 0;
+    UnloadTexture(playerTexture);
+    CloseWindow();           
 }
