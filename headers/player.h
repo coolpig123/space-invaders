@@ -10,8 +10,9 @@ struct Player{
     float height;
     Texture2D* playerTexture;
     vector<Rectangle>* bullets;
+    Sound* shoot;
     Rectangle playerRectangle;
-    Player(float X,float Y,float Width,float Height,Texture2D* PlayerTexture,vector<Rectangle>* Bullets);
+    Player(float X,float Y,float Width,float Height,Texture2D* PlayerTexture,vector<Rectangle>* Bullets,Sound* Shoot);
     void draw();
     void move();
     void handleBullets();
