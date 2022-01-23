@@ -2,13 +2,16 @@
 #include "raylib.h"
 #include <vector>
 using namespace std;
-Invader::Invader(float X,float Y,float Width,float Height,Texture2D* InvaderTexture,vector<Rectangle>* Bullets,Sound* InvaderKilled){
+Invader::Invader(float X,float Y,float Width,float Height,Texture2D* InvaderTexture,vector<Rectangle>* Bullets,Sound* InvaderKilled,int* Fps,vector<Rectangle>* InvaderBullets,int* Score){
     x = X;
     y = Y;
     width = Width;
     height = Height;
     invaderTexture = InvaderTexture;
     bullets = Bullets;
+    fps = Fps;
+    score = Score;
+    invaderBullets = InvaderBullets;
     invaderKilled = InvaderKilled;
     invaderRectangle.x = x;
     invaderRectangle.y = y;
@@ -16,17 +19,38 @@ Invader::Invader(float X,float Y,float Width,float Height,Texture2D* InvaderText
     invaderRectangle.width = width;
 }
 void Invader::draw(){
-    DrawRectangleRec(invaderRectangle,BLACK);
-    DrawTexture(*invaderTexture,invaderRectangle.x,invaderRectangle.y,WHITE);
+    if(invaderFps == *fps && textureRectangle.x == 0){
+        textureRectangle.x = 89;
+        invaderFps = 0;
+    }else if(invaderFps == *fps && textureRectangle.x == 89){
+        textureRectangle.x = 0;
+        invaderFps = 0;
+    }
+    DrawTextureRec(*invaderTexture,textureRectangle,Vector2{x,y},WHITE);
+    invaderFps++;
 }
 bool Invader::checkCollisionBullets(){
     for(int i = 0;i<(*bullets).size();i++){
         if(CheckCollisionRecs((*bullets)[i],invaderRectangle)){
             (*bullets).erase((*bullets).begin() + i);
             PlaySound(*invaderKilled);
+            *score += 20;
             return true;
         }
     }
     return false;
 }
-
+void Invader::move(){
+    if(invaderFps == *fps){
+        x += xVelocity;
+        xVelocity *= -1;
+        y += yVelocity;
+    }
+    invaderRectangle.x = x;
+    invaderRectangle.y = y;
+}
+void Invader::handleBullets(){
+    if(GetRandomValue(0,4000) == 50){
+        (*invaderBullets).push_back({x+width/2,y+height,10,25});
+    }
+}
