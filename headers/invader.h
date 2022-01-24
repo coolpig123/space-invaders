@@ -17,7 +17,7 @@ struct Invader{
     vector<Rectangle>* invaderBullets;
     Sound* invaderKilled;
     Rectangle invaderRectangle;
-    Rectangle textureRectangle = {89,0,89,64};
+    Rectangle textureRectangle;
     Invader(float X,float Y,float Width,float Height,Texture2D* InvaderTexture,vector<Rectangle>* Bullets,Sound* InvaderKilled,int* Fps,vector<Rectangle>* InvaderBullets,int* Score);
     void draw();
     void move();
