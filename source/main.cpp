@@ -26,8 +26,8 @@ int main()
     Player player(screenWidth/2-playerWidth/2,screenHeight-playerHeight,playerWidth,playerHeight,&playerTexture,&playerBullets,&shoot,&invaderBullets);
     vector<Invader> invaders;
     for(int i = 0 ; i < 8 ;i++){
-        invaders.push_back(Invader(i*(screenWidth/8),40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-        invaders.push_back(Invader(i*(screenWidth/8),120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
+        invaders.push_back(Invader(i*(screenWidth/8)+8,40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
+        invaders.push_back(Invader(i*(screenWidth/8)+8,120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
     }
     SetTargetFPS(fps);          
     while (!WindowShouldClose())    
@@ -56,8 +56,8 @@ int main()
             if(player.isShot()) health--;
             if(invaders.size() == 0){
                 for(int i = 0 ; i < 8 ;i++){
-                    invaders.push_back(Invader(i*(screenWidth/8),40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-                    invaders.push_back(Invader(i*(screenWidth/8),120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
+                    invaders.push_back(Invader(i*(screenWidth/8)+8,40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
+                    invaders.push_back(Invader(i*(screenWidth/8)+8,120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
                 }
             }
         }   
@@ -73,8 +73,8 @@ int main()
                 player.x = screenWidth/2-playerWidth/2;
                 invaders.clear();
                 for(int i = 0 ; i < 8 ;i++){
-                    invaders.push_back(Invader(i*(screenWidth/8),40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-                    invaders.push_back(Invader(i*(screenWidth/8),120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
+                    invaders.push_back(Invader(i*(screenWidth/8)+8,40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
+                    invaders.push_back(Invader(i*(screenWidth/8)+8,120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
                 }
             }
 
