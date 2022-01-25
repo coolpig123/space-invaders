@@ -57,7 +57,7 @@ void Invader::move(){
     invaderRectangle.y = y;
 }
 void Invader::handleBullets(){
-    if(GetRandomValue(0,3000) == 50){
+    if(GetRandomValue(0,4000) == 50){
         (*invaderBullets).push_back({x+width/2,y+height,10,25});
     }
 }

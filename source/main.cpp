@@ -17,6 +17,7 @@ int main()
     InitWindow(screenWidth, screenHeight, "space-invaders");
     InitAudioDevice();
     Sound shoot = LoadSound("../resources/shoot.wav");
+    Sound explosion = LoadSound("../resources/explosion.wav");
     Sound invaderKilled = LoadSound("../resources/invaderKilled.wav");
     Texture2D playerTexture = LoadTexture("../resources/player.png");
     Texture2D invaderTextureOne = LoadTexture("../resources/invaderOne.png");
@@ -25,65 +26,49 @@ int main()
     vector<Rectangle> invaderBullets;
     Player player(screenWidth/2-playerWidth/2,screenHeight-playerHeight,playerWidth,playerHeight,&playerTexture,&playerBullets,&shoot,&invaderBullets);
     vector<Invader> invaders;
-    for(int i = 0 ; i < 8 ;i++){
-        invaders.push_back(Invader(i*(screenWidth/8)+8,40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-        invaders.push_back(Invader(i*(screenWidth/8)+8,120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-    }
+    resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
     SetTargetFPS(fps);          
     while (!WindowShouldClose())    
     {
-
-        BeginDrawing();
         if(health != 0){
-            ClearBackground(BLACK);
-            DrawRectangle(0,0,screenWidth,40,DARKGRAY);
-            DrawText(TextFormat("score : %i",score), 0, 0, 40, GREEN);
-            DrawText(TextFormat("health : %i",health), 400, 0, 40, GREEN);
-            drawBullets(playerBullets,invaderBullets);
-            moveBullets(&playerBullets,&invaderBullets);
-            player.draw();
-            player.move();
-            player.handleBullets();
-            for(int i = 0 ; i<invaders.size();i++){
-                invaders[i].draw();
-                if(invaders[i].checkCollisionBullets()){
-                    invaders.erase(invaders.begin() + i);
-                }
-                invaders[i].move();
-                invaders[i].handleBullets();
-            }
-            EndDrawing();
-            if(player.isShot()) health--;
-            if(invaders.size() == 0){
-                for(int i = 0 ; i < 8 ;i++){
-                    invaders.push_back(Invader(i*(screenWidth/8)+8,40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-                    invaders.push_back(Invader(i*(screenWidth/8)+8,120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-                }
-            }
-        }   
-        else {
             BeginDrawing();
                 ClearBackground(BLACK);
-                DrawText("game over",screenWidth/2-200, screenHeight/2-100, 80, WHITE);
-                DrawText("to start press space",screenWidth/2-300, screenHeight/2, 60, WHITE);
+                DrawRectangle(0,0,screenWidth,40,DARKGRAY);
+                DrawText(TextFormat("score : %i",score), 0, 0, 40, GREEN);
+                DrawText(TextFormat("health : %i",health), 400, 0, 40, GREEN);
+                drawBullets(playerBullets,invaderBullets);
+                moveBullets(&playerBullets,&invaderBullets);
+                player.draw();
+                player.move();
+                player.handleBullets();
+                for(int i = 0 ; i<invaders.size();i++){
+                    invaders[i].draw();
+                    if(invaders[i].checkCollisionBullets()){
+                        invaders.erase(invaders.begin() + i);
+                    }
+                    invaders[i].move();
+                    invaders[i].handleBullets();
+                }
             EndDrawing();
+            if(player.isShot()) health--;
+            if(invaders.size() == 0) resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
+            if(collisionPlayerInvaders(invaders,player)) health = 0,PlaySound(explosion);
+            if(health == 0) PlaySound(explosion);
+        }else{
+            gameOverScreen(screenWidth,screenHeight);
             if(IsKeyDown(KEY_SPACE)){
                 health = 3;
                 score = 0;
-                player.x = screenWidth/2-playerWidth/2;
-                invaders.clear();
-                for(int i = 0 ; i < 8 ;i++){
-                    invaders.push_back(Invader(i*(screenWidth/8)+8,40,89,64,&invaderTextureOne,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-                    invaders.push_back(Invader(i*(screenWidth/8)+8,120,96,64,&invaderTextureTwo,&playerBullets,&invaderKilled,&fps,&invaderBullets,&score));
-                }
+                player.x = screenWidth/2-player.width/2;
+                resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
             }
-
         }
     }
     UnloadTexture(playerTexture);
     UnloadTexture(invaderTextureOne);
     UnloadTexture(invaderTextureTwo);
     UnloadSound(shoot); 
+    UnloadSound(explosion);  
     UnloadSound(invaderKilled);      
     CloseAudioDevice(); 
     CloseWindow();           
