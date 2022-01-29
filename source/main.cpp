@@ -7,13 +7,14 @@
 using namespace std;
 int main()
 {
-    const int screenWidth = 1000;
-    const int screenHeight = 800;
+    const int screenWidth = 1600;
+    const int screenHeight = 1000;
     const int playerWidth = 120;
     const int playerHeight = 80;
     int fps = 120;
     int score = 0;
     int health = 3;
+    int xVelocity = 1;
     InitWindow(screenWidth, screenHeight, "space-invaders");
     InitAudioDevice();
     Sound shoot = LoadSound("../resources/shoot.wav");
@@ -22,11 +23,12 @@ int main()
     Texture2D playerTexture = LoadTexture("../resources/player.png");
     Texture2D invaderTextureOne = LoadTexture("../resources/invaderOne.png");
     Texture2D invaderTextureTwo = LoadTexture("../resources/invaderTwo.png");
+    Texture2D invaderTextureThree = LoadTexture("../resources/invaderThree.png");
     vector<Rectangle> playerBullets;
     vector<Rectangle> invaderBullets;
     Player player(screenWidth/2-playerWidth/2,screenHeight-playerHeight,playerWidth,playerHeight,&playerTexture,&playerBullets,&shoot,&invaderBullets);
     vector<Invader> invaders;
-    resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
+    resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderTextureThree,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
     SetTargetFPS(fps);          
     while (!WindowShouldClose())    
     {
@@ -46,27 +48,29 @@ int main()
                     if(invaders[i].checkCollisionBullets()){
                         invaders.erase(invaders.begin() + i);
                     }
-                    invaders[i].move();
                     invaders[i].handleBullets();
                 }
             EndDrawing();
+            moveInvaders(&invaders,screenWidth,&xVelocity);
             if(player.isShot()) health--;
-            if(invaders.size() == 0) resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
+            if(invaders.size() == 0) resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderTextureThree,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
             if(collisionPlayerInvaders(invaders,player)) health = 0,PlaySound(explosion);
             if(health == 0) PlaySound(explosion);
+            if(invadersUnderScreen(&invaders,screenHeight)) resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderTextureThree,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
         }else{
             gameOverScreen(screenWidth,screenHeight);
             if(IsKeyDown(KEY_SPACE)){
                 health = 3;
                 score = 0;
                 player.x = screenWidth/2-player.width/2;
-                resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
+                resetInvaders(&invaders,screenWidth,&invaderTextureOne,&invaderTextureTwo,&invaderTextureThree,&invaderKilled,&fps,&invaderBullets,&score,&playerBullets);
             }
         }
     }
     UnloadTexture(playerTexture);
     UnloadTexture(invaderTextureOne);
     UnloadTexture(invaderTextureTwo);
+    UnloadTexture(invaderTextureThree);
     UnloadSound(shoot); 
     UnloadSound(explosion);  
     UnloadSound(invaderKilled);      

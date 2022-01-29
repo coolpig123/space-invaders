@@ -32,8 +32,9 @@ void Invader::draw(){
     }else if(invaderFps == *fps && textureRectangle.x == width){
         textureRectangle.x = 0;
         invaderFps = 0;
-    }
+    } 
     DrawTextureRec(*invaderTexture,textureRectangle,Vector2{x,y},WHITE);
+    
     invaderFps++;
 }
 bool Invader::checkCollisionBullets(){
@@ -47,17 +48,8 @@ bool Invader::checkCollisionBullets(){
     }
     return false;
 }
-void Invader::move(){
-    if(invaderFps == *fps){
-        x += xVelocity;
-        xVelocity *= -1;
-        y += yVelocity;
-    }
-    invaderRectangle.x = x;
-    invaderRectangle.y = y;
-}
 void Invader::handleBullets(){
-    if(GetRandomValue(0,4000) == 50){
+    if(GetRandomValue(0,7000) == 50){
         (*invaderBullets).push_back({x+width/2,y+height,10,25});
     }
 }

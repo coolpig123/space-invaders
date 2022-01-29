@@ -10,7 +10,7 @@ struct Invader{
     int* fps;
     int invaderFps = 0;
     int xVelocity = 2;
-    int yVelocity = 20;
+    int yVelocity = 8;
     int* score;
     Texture2D* invaderTexture;
     vector<Rectangle>* bullets;
@@ -20,7 +20,6 @@ struct Invader{
     Rectangle textureRectangle;
     Invader(float X,float Y,float Width,float Height,Texture2D* InvaderTexture,vector<Rectangle>* Bullets,Sound* InvaderKilled,int* Fps,vector<Rectangle>* InvaderBullets,int* Score);
     void draw();
-    void move();
     bool checkCollisionBullets();
     void handleBullets();
 };
